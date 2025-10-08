@@ -1,16 +1,21 @@
 import { useState } from "react";
 import "./index.css";
 import StartPage from "./pages/StartPage";
+import GamePage from "./pages/GamePage";
 
 function App() {
-  function setPage(arg0: string) {
-    throw new Error("Function not implemented.");
-  }
+  const [page, setPage] = useState<"start" | "game" | "result">("start");
 
   return (
     <div className="app">
-      <StartPage onStart={() => setPage("game")}/>
-
+      {page === "start" && <StartPage onStart={() => setPage("game")} />}
+      {page === "game" && (
+        <GamePage
+          onGameEnd={(res: string) => {
+            setPage("result");
+          }}
+        />
+      )}
     </div>
   );
 }
