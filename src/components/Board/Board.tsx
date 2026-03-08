@@ -1,4 +1,4 @@
-import Cell from "./Cell";
+import Cell from "../Cell/Cell";
 
 function Board() {
   const cells = Array.from({ length: 9 });
