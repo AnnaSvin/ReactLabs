@@ -3,10 +3,11 @@ import "./index.css";
 import StartPage from "./pages/StartPage";
 import GamePage from "./pages/GamePage";
 import ResultPage from "./pages/ResultPage";
+import type { Page, GameResult } from "./types/game.types";
 
 function App() {
-  const [page, setPage] = useState<"start" | "game" | "result">("start");
-  const [result, setResult] = useState<string | null>(null);
+  const [page, setPage] = useState<Page>("start");
+const [result, setResult] = useState<GameResult>(null);
 
   return (
     <div className="app">
