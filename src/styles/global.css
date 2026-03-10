@@ -4,7 +4,6 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -22,35 +21,72 @@ body {
   padding: 24px;
   background: white;
   border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-  min-width: 380px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  min-width: 420px;
+}
+
+.page-description {
+  margin-bottom: 20px;
+  color: #666;
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 600;
+}
+
+.form-group select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cfd8e3;
+  border-radius: 10px;
+  font-size: 1rem;
+}
+
+.game-info {
+  margin-bottom: 16px;
+}
+
+.score-board {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  font-weight: 600;
 }
 
 .board {
   display: grid;
-  grid-template-columns: repeat(3, 100px);
   gap: 12px;
   justify-content: center;
-  margin-top: 24px;
+  margin: 24px 0;
 }
 
 .cell {
   width: 100px;
   height: 100px;
-
   background: white;
   border: 2px solid #333;
-
   display: flex;
   justify-content: center;
   align-items: center;
-
   font-size: 2.2rem;
   font-weight: bold;
-
   border-radius: 12px;
   cursor: pointer;
-
   transition: transform 0.15s, background 0.2s;
 }
 
@@ -59,26 +95,54 @@ body {
   transform: scale(1.04);
 }
 
-.btn,
-.end-btn {
-  margin-top: 20px;
-
+.btn {
+  margin-top: 12px;
   padding: 10px 20px;
-
   background: #0078d7;
   color: white;
-
   border: none;
   border-radius: 10px;
-
   font-size: 1rem;
-
   cursor: pointer;
-
   transition: background 0.3s;
 }
 
-.btn:hover,
-.end-btn:hover {
+.btn:hover {
   background: #005fa3;
+}
+
+.secondary-btn {
+  background: #6c757d;
+}
+
+.secondary-btn:hover {
+  background: #545b62;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.modal-window {
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
 }
