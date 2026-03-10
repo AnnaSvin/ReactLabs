@@ -1,17 +1,22 @@
 import Board from "../components/Board/Board";
+import { useTicTacToe } from "../hooks/useTicTacToe";
+import type { GameResult } from "../types/game.types";
 
 interface GamePageProps {
-  onGameEnd: (result: string) => void;
+  onGameEnd: (result: GameResult) => void;
 }
 
 function GamePage({ onGameEnd }: GamePageProps) {
+  const { board, currentPlayer, handleCellClick } = useTicTacToe(onGameEnd);
+
   return (
     <div className="page game-page">
       <h2>Гра</h2>
-      <Board />
-      <button className="end-btn" onClick={() => onGameEnd("Нічия")}>
-        Завершити гру
-      </button>
+      <p>Поточний гравець: {currentPlayer}</p>
+
+      <Board board={board} 
+      onCellClick={handleCellClick} 
+      />
     </div>
   );
 }

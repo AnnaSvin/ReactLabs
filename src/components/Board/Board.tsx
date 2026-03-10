@@ -1,12 +1,20 @@
 import Cell from "../Cell/Cell";
+import type { BoardState } from "../../types/game.types";
 
-function Board() {
-  const cells = Array.from({ length: 9 });
+interface BoardProps {
+  board: BoardState;
+  onCellClick: (index: number) => void;
+}
 
+function Board({ board, onCellClick }: BoardProps) {
   return (
     <div className="board">
-      {cells.map((_, i) => (
-        <Cell key={i} />
+      {board.map((value, index) => (
+        <Cell
+          key={index}
+          value={value}
+          onClick={() => onCellClick(index)}
+        />
       ))}
     </div>
   );
