@@ -1,22 +1,24 @@
 import Board from "../components/Board/Board";
-import { useTicTacToe } from "../hooks/useTicTacToe";
-import type { GameResult } from "../types/game.types";
+import { createEmptyBoard } from "../utils/helpers";
 
 interface GamePageProps {
-  onGameEnd: (result: GameResult) => void;
+  onBackToStart: () => void;
 }
 
-function GamePage({ onGameEnd }: GamePageProps) {
-  const { board, currentPlayer, handleCellClick } = useTicTacToe(onGameEnd);
-
+function GamePage({ onBackToStart }: GamePageProps) {
   return (
     <div className="page game-page">
-      <h2>Гра</h2>
-      <p>Поточний гравець: {currentPlayer}</p>
+      <h2>Game</h2>
+      <p>Game logic will be added in the next commit.</p>
 
-      <Board board={board} 
-      onCellClick={handleCellClick} 
+      <Board
+        board={createEmptyBoard()}
+        onCellClick={() => {}}
       />
+
+      <button className="btn" onClick={onBackToStart}>
+        Back to settings
+      </button>
     </div>
   );
 }
