@@ -1,4 +1,5 @@
 import Board from "../components/Board/Board";
+import GameOverModal from "../components/GameOverModal/GameOverModal";
 import { useGameSettings } from "../context/GameSettingsContext";
 import { useTicTacToe } from "../hooks/useTicTacToe";
 
@@ -11,9 +12,12 @@ function GamePage({ onBackToStart }: GamePageProps) {
   const {
     board,
     currentPlayer,
+    result,
     round,
     score,
     handleCellClick,
+    startNextRound,
+    restartCurrentRound,
   } = useTicTacToe(settings);
 
   return (
@@ -24,6 +28,7 @@ function GamePage({ onBackToStart }: GamePageProps) {
         <p>Round: {round}</p>
         <p>Current player: {currentPlayer}</p>
         <p>Difficulty: {settings.difficulty}</p>
+        <p>Board size: {settings.boardSize} x {settings.boardSize}</p>
       </div>
 
       <div className="score-board">
@@ -41,6 +46,14 @@ function GamePage({ onBackToStart }: GamePageProps) {
       <button className="btn" onClick={onBackToStart}>
         Back to settings
       </button>
+
+      <GameOverModal
+        isOpen={result !== null}
+        result={result}
+        round={round}
+        onNextRound={startNextRound}
+        onRestartRound={restartCurrentRound}
+      />
     </div>
   );
 }
