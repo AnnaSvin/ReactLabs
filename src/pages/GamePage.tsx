@@ -1,19 +1,41 @@
 import Board from "../components/Board/Board";
-import { createEmptyBoard } from "../utils/helpers";
+import { useGameSettings } from "../context/GameSettingsContext";
+import { useTicTacToe } from "../hooks/useTicTacToe";
 
 interface GamePageProps {
   onBackToStart: () => void;
 }
 
 function GamePage({ onBackToStart }: GamePageProps) {
+  const { settings } = useGameSettings();
+  const {
+    board,
+    currentPlayer,
+    round,
+    score,
+    handleCellClick,
+  } = useTicTacToe(settings);
+
   return (
     <div className="page game-page">
       <h2>Game</h2>
-      <p>Game logic will be added in the next commit.</p>
+
+      <div className="game-info">
+        <p>Round: {round}</p>
+        <p>Current player: {currentPlayer}</p>
+        <p>Difficulty: {settings.difficulty}</p>
+      </div>
+
+      <div className="score-board">
+        <span>X: {score.X}</span>
+        <span>O: {score.O}</span>
+        <span>Draws: {score.draws}</span>
+      </div>
 
       <Board
-        board={createEmptyBoard()}
-        onCellClick={() => {}}
+        board={board}
+        boardSize={settings.boardSize}
+        onCellClick={handleCellClick}
       />
 
       <button className="btn" onClick={onBackToStart}>
