@@ -1,14 +1,17 @@
+import { useNavigate, useParams } from "react-router-dom";
 import Board from "../components/Board/Board";
 import GameOverModal from "../components/GameOverModal/GameOverModal";
 import { useGameSettings } from "../context/GameSettingsContext";
+import { useGameSession } from "../context/GameSessionContext";
 import { useTicTacToe } from "../hooks/useTicTacToe";
+import styles from "./GamePage.module.css";
 
-interface GamePageProps {
-  onBackToStart: () => void;
-}
-
-function GamePage({ onBackToStart }: GamePageProps) {
+function GamePage() {
+  const { userId } = useParams();
+  const navigate = useNavigate();
   const { settings } = useGameSettings();
+  const { dispatch } = useGameSession();
+
   const {
     board,
     currentPlayer,
@@ -20,18 +23,26 @@ function GamePage({ onBackToStart }: GamePageProps) {
     restartCurrentRound,
   } = useTicTacToe(settings);
 
+  const handleBackToSettings = () => {
+    dispatch({ type: "RESET_SESSION" });
+    navigate(`/${userId}/settings`);
+  };
+
   return (
-    <div className="page game-page">
+    <div className={styles.page}>
       <h2>Game</h2>
 
-      <div className="game-info">
+      <div className={styles.info}>
+        <p>User: {userId}</p>
         <p>Round: {round}</p>
         <p>Current player: {currentPlayer}</p>
         <p>Difficulty: {settings.difficulty}</p>
-        <p>Board size: {settings.boardSize} x {settings.boardSize}</p>
+        <p>
+          Board size: {settings.boardSize} x {settings.boardSize}
+        </p>
       </div>
 
-      <div className="score-board">
+      <div className={styles.scoreBoard}>
         <span>X: {score.X}</span>
         <span>O: {score.O}</span>
         <span>Draws: {score.draws}</span>
@@ -43,7 +54,7 @@ function GamePage({ onBackToStart }: GamePageProps) {
         onCellClick={handleCellClick}
       />
 
-      <button className="btn" onClick={onBackToStart}>
+      <button className="btn" onClick={handleBackToSettings}>
         Back to settings
       </button>
 

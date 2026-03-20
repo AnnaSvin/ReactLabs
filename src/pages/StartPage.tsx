@@ -1,16 +1,15 @@
 import GameSettingsForm from "../components/GameSettingsForm/GameSettingsForm";
+import styles from "./StartPage.module.css";
 
-interface StartPageProps {
-  onStart: () => void;
-}
-
-function StartPage({ onStart }: StartPageProps) {
+function StartPage() {
   return (
-    <div className="page start-page">
-      <h1>Хрестики-нулики</h1>
-      <p className="page-description">Choose game settings before starting.</p>
+    <div className={styles.page}>
+      <h2 className={styles.title}>Game settings</h2>
+      <p className={styles.description}>
+        Choose the game parameters before starting a new match.
+      </p>
 
-      <GameSettingsForm onSubmitSuccess={onStart} />
+      <GameSettingsForm />
     </div>
   );
 }

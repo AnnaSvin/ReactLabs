@@ -1,15 +1,18 @@
+import { Navigate, Route, Routes } from "react-router-dom";
+import AppLayout from "./components/AppLayout/AppLayout";
 import StartPage from "./pages/StartPage";
 import GamePage from "./pages/GamePage";
-import { useApp } from "./hooks/useApp";
 
 function App() {
-  const { page, startGame, goToStart } = useApp();
-
   return (
-    <div className="app">
-      {page === "start" && <StartPage onStart={startGame} />}
-      {page === "game" && <GamePage onBackToStart={goToStart} />}
-    </div>
+    <Routes>
+      <Route path="/" element={<Navigate to="/guest/settings" replace />} />
+
+      <Route path="/:userId" element={<AppLayout />}>
+        <Route path="settings" element={<StartPage />} />
+        <Route path="game" element={<GamePage />} />
+      </Route>
+    </Routes>
   );
 }
 
