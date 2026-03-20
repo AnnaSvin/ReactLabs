@@ -1,29 +1,37 @@
-import { useEffect, useState } from "react";
-import { useGameSession } from "../context/GameSessionContext";
+import { useEffect, useRef, useState } from "react";
+import { useGameStore } from "../store/gameStore";
 import type { GameResult, GameSettings, Player } from "../types/game.types";
 import { checkWinner, createEmptyBoard, getBotMove } from "../utils/helpers";
 
-export function useTicTacToe(settings: GameSettings) {
-  const { state, dispatch } = useGameSession();
+export function useTicTacToe(settings: GameSettings, userId: string) {
+  const round = useGameStore((state) => state.round);
+  const score = useGameStore((state) => state.score);
+  const nextRound = useGameStore((state) => state.nextRound);
+  const applyResult = useGameStore((state) => state.applyResult);
+  const rollbackResult = useGameStore((state) => state.rollbackResult);
+  const addResultRecord = useGameStore((state) => state.addResultRecord);
+  const removeLastResultRecord = useGameStore((state) => state.removeLastResultRecord);
 
   const [board, setBoard] = useState(createEmptyBoard(settings.boardSize));
   const [currentPlayer, setCurrentPlayer] = useState<Player>("X");
   const [result, setResult] = useState<GameResult>(null);
 
+  const isResultHandledRef = useRef(false);
+
   const resetBoardState = () => {
     setBoard(createEmptyBoard(settings.boardSize));
     setCurrentPlayer("X");
     setResult(null);
-  };
-
-  const finishRound = (gameResult: GameResult) => {
-    setResult(gameResult);
-    dispatch({ type: "APPLY_RESULT", payload: gameResult });
+    isResultHandledRef.current = false;
   };
 
   const makeMove = (index: number, player: Player) => {
+    if (result !== null) {
+      return;
+    }
+
     setBoard((prevBoard) => {
-      if (prevBoard[index] !== null || result !== null) {
+      if (prevBoard[index] !== null) {
         return prevBoard;
       }
 
@@ -33,7 +41,7 @@ export function useTicTacToe(settings: GameSettings) {
       const gameResult = checkWinner(updatedBoard, settings.boardSize);
 
       if (gameResult !== null) {
-        finishRound(gameResult);
+        setResult(gameResult);
       } else {
         setCurrentPlayer(player === "X" ? "O" : "X");
       }
@@ -51,17 +59,37 @@ export function useTicTacToe(settings: GameSettings) {
   };
 
   const startNextRound = () => {
-    dispatch({ type: "NEXT_ROUND" });
+    nextRound();
     resetBoardState();
   };
 
   const restartCurrentRound = () => {
-    if (result !== null) {
-      dispatch({ type: "ROLLBACK_RESULT", payload: result });
+    if (result !== null && isResultHandledRef.current) {
+      rollbackResult(result);
+      removeLastResultRecord();
     }
 
     resetBoardState();
   };
+
+  useEffect(() => {
+    if (result === null || isResultHandledRef.current) {
+      return;
+    }
+
+    applyResult(result);
+    addResultRecord({
+      id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      userId,
+      round,
+      result,
+      difficulty: settings.difficulty,
+      boardSize: settings.boardSize,
+      playedAt: new Date().toISOString(),
+    });
+
+    isResultHandledRef.current = true;
+  }, [result, userId, round, settings, applyResult, addResultRecord]);
 
   useEffect(() => {
     resetBoardState();
@@ -86,8 +114,8 @@ export function useTicTacToe(settings: GameSettings) {
     board,
     currentPlayer,
     result,
-    round: state.round,
-    score: state.score,
+    round,
+    score,
     handleCellClick,
     startNextRound,
     restartCurrentRound,
