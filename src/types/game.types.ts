@@ -19,3 +19,19 @@ export interface GameSettings {
   boardSize: BoardSize;
   botMoveDelay: BotMoveDelay;
 }
+
+export interface ResultRecord {
+  id: string;
+  userId: string;
+  round: number;
+  result: Exclude<GameResult, null>;
+  difficulty: Difficulty;
+  boardSize: BoardSize;
+  playedAt: string;
+}
+
+export interface ScoreState {
+  X: number;
+  O: number;
+  draws: number;
+}
