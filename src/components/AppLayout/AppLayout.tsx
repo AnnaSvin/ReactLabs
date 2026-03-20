@@ -1,4 +1,5 @@
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import styles from "./AppLayout.module.css";
 
 function AppLayout() {
   const { userId } = useParams();
@@ -9,23 +10,27 @@ function AppLayout() {
   const isGamePage = location.pathname.includes("/game");
 
   return (
-    <div className="app-shell">
-      <header className="app-header">
+    <div className={styles.shell}>
+      <header className={styles.header}>
         <div>
-          <h1 className="app-title">Tic-Tac-Toe</h1>
-          <p className="app-subtitle">Player ID: {userId}</p>
+          <h1 className={styles.title}>Tic-Tac-Toe</h1>
+          <p className={styles.subtitle}>Player ID: {userId}</p>
         </div>
 
-        <nav className="app-nav">
+        <nav className={styles.nav}>
           <button
-            className={`nav-btn ${isSettingsPage ? "active-nav-btn" : ""}`}
+            className={`${styles.navBtn} ${
+              isSettingsPage ? styles.activeNavBtn : ""
+            }`}
             onClick={() => navigate(`/${userId}/settings`)}
           >
             Settings
           </button>
 
           <button
-            className={`nav-btn ${isGamePage ? "active-nav-btn" : ""}`}
+            className={`${styles.navBtn} ${
+              isGamePage ? styles.activeNavBtn : ""
+            }`}
             onClick={() => navigate(`/${userId}/game`)}
           >
             Game
