@@ -1,61 +1,14 @@
 import { useEffect, useState } from "react";
+import { useGameSession } from "../context/GameSessionContext";
 import type { GameResult, GameSettings, Player } from "../types/game.types";
 import { checkWinner, createEmptyBoard, getBotMove } from "../utils/helpers";
 
-interface ScoreState {
-  X: number;
-  O: number;
-  draws: number;
-}
-
-const initialScore: ScoreState = {
-  X: 0,
-  O: 0,
-  draws: 0,
-};
-
 export function useTicTacToe(settings: GameSettings) {
+  const { state, dispatch } = useGameSession();
+
   const [board, setBoard] = useState(createEmptyBoard(settings.boardSize));
   const [currentPlayer, setCurrentPlayer] = useState<Player>("X");
   const [result, setResult] = useState<GameResult>(null);
-  const [round, setRound] = useState(1);
-  const [score, setScore] = useState<ScoreState>(initialScore);
-
-  const updateScore = (gameResult: GameResult) => {
-    setScore((prev) => {
-      if (gameResult === "X") {
-        return { ...prev, X: prev.X + 1 };
-      }
-
-      if (gameResult === "O") {
-        return { ...prev, O: prev.O + 1 };
-      }
-
-      if (gameResult === "draw") {
-        return { ...prev, draws: prev.draws + 1 };
-      }
-
-      return prev;
-    });
-  };
-
-  const rollbackScore = (gameResult: GameResult) => {
-    setScore((prev) => {
-      if (gameResult === "X") {
-        return { ...prev, X: Math.max(0, prev.X - 1) };
-      }
-
-      if (gameResult === "O") {
-        return { ...prev, O: Math.max(0, prev.O - 1) };
-      }
-
-      if (gameResult === "draw") {
-        return { ...prev, draws: Math.max(0, prev.draws - 1) };
-      }
-
-      return prev;
-    });
-  };
 
   const resetBoardState = () => {
     setBoard(createEmptyBoard(settings.boardSize));
@@ -65,7 +18,7 @@ export function useTicTacToe(settings: GameSettings) {
 
   const finishRound = (gameResult: GameResult) => {
     setResult(gameResult);
-    updateScore(gameResult);
+    dispatch({ type: "APPLY_RESULT", payload: gameResult });
   };
 
   const makeMove = (index: number, player: Player) => {
@@ -98,17 +51,21 @@ export function useTicTacToe(settings: GameSettings) {
   };
 
   const startNextRound = () => {
-    setRound((prev) => prev + 1);
+    dispatch({ type: "NEXT_ROUND" });
     resetBoardState();
   };
 
   const restartCurrentRound = () => {
     if (result !== null) {
-      rollbackScore(result);
+      dispatch({ type: "ROLLBACK_RESULT", payload: result });
     }
 
     resetBoardState();
   };
+
+  useEffect(() => {
+    resetBoardState();
+  }, [settings.boardSize]);
 
   useEffect(() => {
     if (currentPlayer !== "O" || result !== null) {
@@ -129,8 +86,8 @@ export function useTicTacToe(settings: GameSettings) {
     board,
     currentPlayer,
     result,
-    round,
-    score,
+    round: state.round,
+    score: state.score,
     handleCellClick,
     startNextRound,
     restartCurrentRound,

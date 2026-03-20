@@ -2,12 +2,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import Board from "../components/Board/Board";
 import GameOverModal from "../components/GameOverModal/GameOverModal";
 import { useGameSettings } from "../context/GameSettingsContext";
+import { useGameSession } from "../context/GameSessionContext";
 import { useTicTacToe } from "../hooks/useTicTacToe";
 
 function GamePage() {
   const { userId } = useParams();
   const navigate = useNavigate();
   const { settings } = useGameSettings();
+  const { dispatch } = useGameSession();
 
   const {
     board,
@@ -19,6 +21,11 @@ function GamePage() {
     startNextRound,
     restartCurrentRound,
   } = useTicTacToe(settings);
+
+  const handleBackToSettings = () => {
+    dispatch({ type: "RESET_SESSION" });
+    navigate(`/${userId}/settings`);
+  };
 
   return (
     <div className="page game-page">
@@ -46,10 +53,7 @@ function GamePage() {
         onCellClick={handleCellClick}
       />
 
-      <button
-        className="btn"
-        onClick={() => navigate(`/${userId}/settings`)}
-      >
+      <button className="btn" onClick={handleBackToSettings}>
         Back to settings
       </button>
 
