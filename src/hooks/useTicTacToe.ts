@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGameStore } from "../store/gameStore";
 import type { GameResult, GameSettings, Player } from "../types/game.types";
 import { checkWinner, createEmptyBoard, getBotMove } from "../utils/helpers";
@@ -16,30 +16,22 @@ export function useTicTacToe(settings: GameSettings, userId: string) {
   const [currentPlayer, setCurrentPlayer] = useState<Player>("X");
   const [result, setResult] = useState<GameResult>(null);
 
+  const isResultHandledRef = useRef(false);
+
   const resetBoardState = () => {
     setBoard(createEmptyBoard(settings.boardSize));
     setCurrentPlayer("X");
     setResult(null);
-  };
-
-  const finishRound = (gameResult: Exclude<GameResult, null>) => {
-    setResult(gameResult);
-    applyResult(gameResult);
-
-    addResultRecord({
-      id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
-      userId,
-      round,
-      result: gameResult,
-      difficulty: settings.difficulty,
-      boardSize: settings.boardSize,
-      playedAt: new Date().toISOString(),
-    });
+    isResultHandledRef.current = false;
   };
 
   const makeMove = (index: number, player: Player) => {
+    if (result !== null) {
+      return;
+    }
+
     setBoard((prevBoard) => {
-      if (prevBoard[index] !== null || result !== null) {
+      if (prevBoard[index] !== null) {
         return prevBoard;
       }
 
@@ -49,7 +41,7 @@ export function useTicTacToe(settings: GameSettings, userId: string) {
       const gameResult = checkWinner(updatedBoard, settings.boardSize);
 
       if (gameResult !== null) {
-        finishRound(gameResult);
+        setResult(gameResult);
       } else {
         setCurrentPlayer(player === "X" ? "O" : "X");
       }
@@ -72,13 +64,32 @@ export function useTicTacToe(settings: GameSettings, userId: string) {
   };
 
   const restartCurrentRound = () => {
-    if (result !== null) {
+    if (result !== null && isResultHandledRef.current) {
       rollbackResult(result);
       removeLastResultRecord();
     }
 
     resetBoardState();
   };
+
+  useEffect(() => {
+    if (result === null || isResultHandledRef.current) {
+      return;
+    }
+
+    applyResult(result);
+    addResultRecord({
+      id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      userId,
+      round,
+      result,
+      difficulty: settings.difficulty,
+      boardSize: settings.boardSize,
+      playedAt: new Date().toISOString(),
+    });
+
+    isResultHandledRef.current = true;
+  }, [result, userId, round, settings, applyResult, addResultRecord]);
 
   useEffect(() => {
     resetBoardState();
