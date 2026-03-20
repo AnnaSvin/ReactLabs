@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import AppLayout from "./components/AppLayout/AppLayout";
 import StartPage from "./pages/StartPage";
 import GamePage from "./pages/GamePage";
+import ResultsPage from "./pages/ResultsPage";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Route path="/:userId" element={<AppLayout />}>
         <Route path="settings" element={<StartPage />} />
         <Route path="game" element={<GamePage />} />
+        <Route path="results" element={<ResultsPage />} />
       </Route>
     </Routes>
   );

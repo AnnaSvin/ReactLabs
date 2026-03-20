@@ -8,6 +8,7 @@ function AppLayout() {
 
   const isSettingsPage = location.pathname.includes("/settings");
   const isGamePage = location.pathname.includes("/game");
+  const isResultsPage = location.pathname.includes("/results");
 
   return (
     <div className={styles.shell}>
@@ -19,21 +20,24 @@ function AppLayout() {
 
         <nav className={styles.nav}>
           <button
-            className={`${styles.navBtn} ${
-              isSettingsPage ? styles.activeNavBtn : ""
-            }`}
+            className={`${styles.navBtn} ${isSettingsPage ? styles.activeNavBtn : ""}`}
             onClick={() => navigate(`/${userId}/settings`)}
           >
             Settings
           </button>
 
           <button
-            className={`${styles.navBtn} ${
-              isGamePage ? styles.activeNavBtn : ""
-            }`}
+            className={`${styles.navBtn} ${isGamePage ? styles.activeNavBtn : ""}`}
             onClick={() => navigate(`/${userId}/game`)}
           >
             Game
+          </button>
+
+          <button
+            className={`${styles.navBtn} ${isResultsPage ? styles.activeNavBtn : ""}`}
+            onClick={() => navigate(`/${userId}/results`)}
+          >
+            Results
           </button>
         </nav>
       </header>
