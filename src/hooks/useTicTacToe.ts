@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
-import { useGameSession } from "../context/GameSessionContext";
+import { useGameStore } from "../store/gameStore";
 import type { GameResult, GameSettings, Player } from "../types/game.types";
 import { checkWinner, createEmptyBoard, getBotMove } from "../utils/helpers";
 
-export function useTicTacToe(settings: GameSettings) {
-  const { state, dispatch } = useGameSession();
+export function useTicTacToe(settings: GameSettings, userId: string) {
+  const round = useGameStore((state) => state.round);
+  const score = useGameStore((state) => state.score);
+  const nextRound = useGameStore((state) => state.nextRound);
+  const applyResult = useGameStore((state) => state.applyResult);
+  const rollbackResult = useGameStore((state) => state.rollbackResult);
+  const addResultRecord = useGameStore((state) => state.addResultRecord);
+  const removeLastResultRecord = useGameStore((state) => state.removeLastResultRecord);
 
   const [board, setBoard] = useState(createEmptyBoard(settings.boardSize));
   const [currentPlayer, setCurrentPlayer] = useState<Player>("X");
@@ -16,9 +22,19 @@ export function useTicTacToe(settings: GameSettings) {
     setResult(null);
   };
 
-  const finishRound = (gameResult: GameResult) => {
+  const finishRound = (gameResult: Exclude<GameResult, null>) => {
     setResult(gameResult);
-    dispatch({ type: "APPLY_RESULT", payload: gameResult });
+    applyResult(gameResult);
+
+    addResultRecord({
+      id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      userId,
+      round,
+      result: gameResult,
+      difficulty: settings.difficulty,
+      boardSize: settings.boardSize,
+      playedAt: new Date().toISOString(),
+    });
   };
 
   const makeMove = (index: number, player: Player) => {
@@ -51,13 +67,14 @@ export function useTicTacToe(settings: GameSettings) {
   };
 
   const startNextRound = () => {
-    dispatch({ type: "NEXT_ROUND" });
+    nextRound();
     resetBoardState();
   };
 
   const restartCurrentRound = () => {
     if (result !== null) {
-      dispatch({ type: "ROLLBACK_RESULT", payload: result });
+      rollbackResult(result);
+      removeLastResultRecord();
     }
 
     resetBoardState();
@@ -86,8 +103,8 @@ export function useTicTacToe(settings: GameSettings) {
     board,
     currentPlayer,
     result,
-    round: state.round,
-    score: state.score,
+    round,
+    score,
     handleCellClick,
     startNextRound,
     restartCurrentRound,

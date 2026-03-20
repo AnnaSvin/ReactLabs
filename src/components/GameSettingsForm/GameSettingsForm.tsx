@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGameSettings } from "../../context/GameSettingsContext";
+import { useGameStore } from "../../store/gameStore";
 import type {
   BoardSize,
   BotMoveDelay,
@@ -11,7 +11,10 @@ import type {
 function GameSettingsForm() {
   const { userId } = useParams();
   const navigate = useNavigate();
-  const { settings, updateSettings } = useGameSettings();
+
+  const settings = useGameStore((state) => state.settings);
+  const updateSettings = useGameStore((state) => state.updateSettings);
+  const resetSession = useGameStore((state) => state.resetSession);
 
   const { register, handleSubmit } = useForm<GameSettings>({
     defaultValues: settings,
@@ -24,6 +27,7 @@ function GameSettingsForm() {
       botMoveDelay: Number(data.botMoveDelay) as BotMoveDelay,
     });
 
+    resetSession();
     navigate(`/${userId}/game`);
   };
 
