@@ -1,0 +1,11 @@
+[@types/react@19.2.2](https://github.com/DefinitelyTyped/DefinitelyTyped) - MIT
+[cookie@1.1.1](https://github.com/jshttp/cookie) - MIT
+[csstype@3.1.3](https://github.com/frenic/csstype) - MIT
+[react-dom@19.2.0](https://github.com/facebook/react) - MIT
+[react-hook-form@7.71.2](https://github.com/react-hook-form/react-hook-form) - MIT
+[react-router-dom@7.13.1](https://github.com/remix-run/react-router) - MIT
+[react-router@7.13.1](https://github.com/remix-run/react-router) - MIT
+[react@19.2.0](https://github.com/facebook/react) - MIT
+[scheduler@0.27.0](https://github.com/facebook/react) - MIT
+[set-cookie-parser@2.7.2](https://github.com/nfriedly/set-cookie-parser) - MIT
+[zustand@5.0.12](https://github.com/pmndrs/zustand) - MIT
