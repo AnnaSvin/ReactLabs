@@ -1,73 +1,83 @@
-# React + TypeScript + Vite
+# Tic-Tac-Toe (React + TypeScript)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Навчальний проєкт — гра «Хрестики-нулики» з налаштуваннями складності, розміру дошки, історією результатів та збереженням стану в LocalStorage.
 
-Currently, two official plugins are available:
+Розроблено в межах лабораторних робіт №1, 2, 7, 8, 11, 12 з предмету **«Стандартизація та документування ПЗ»**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Стек технологій
 
-## React Compiler
+- **React 18** + **TypeScript**
+- **Vite** — збирач та dev-сервер
+- **React Router** — маршрутизація між сторінками
+- **Zustand** + `persist` — управління станом та збереження в LocalStorage
+- **CSS Modules** — інкапсульовані стилі компонентів
+- **Storybook** — каталог UI-компонентів з документацією
+- **TypeDoc** — згенерована API-документація
+- **react-cookie-consent** — GDPR-сумісний банер згоди
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Можливості
 
-## Expanding the ESLint configuration
+- Три рівні складності бота: `easy` / `medium` / `hard`
+- Підтримка дощок 3×3 та 4×4
+- Налаштування затримки ходу бота (300 / 700 / 1200 мс)
+- Підрахунок очок між раундами
+- Збереження історії результатів по користувачу
+- Перезапуск поточного раунду з відкатом рахунку
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Встановлення
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+git clone https://github.com/AnnaSvin/ReactLabs.git
+cd ReactLabs
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Вимоги: **Node.js 18+** та **npm 9+**.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Основні команди
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Команда | Опис |
+| --- | --- |
+| `npm run dev` | Запуск dev-сервера на `http://localhost:5173` |
+| `npm run build` | Збірка production-версії у папку `dist/` |
+| `npm run preview` | Локальний прев'ю-сервер для зібраної версії |
+| `npm run lint` | Перевірка коду через ESLint |
+| `npm run storybook` | Запуск Storybook на `http://localhost:6006` |
+| `npm run build-storybook` | Збірка статичного Storybook |
+| `npm run docs` | Генерація API-документації у папку `docs/` |
+| `npm run license-report` | Генерація звіту по ліцензіях залежностей |
+| `npm run license-summary` | Короткий підсумок використаних ліцензій у консолі |
+
+## Структура проєкту
+
 ```
+src/
+├── components/        # UI-компоненти (Board, GameOverModal, CookieBanner, ...)
+├── context/           # React Context (GameSession, GameSettings)
+├── hooks/             # Кастомні хуки (useTicTacToe, useLocalStorage)
+├── pages/             # Сторінки (StartPage, GamePage, ResultsPage)
+├── store/             # Zustand-стор з persist-middleware
+├── styles/            # Глобальні стилі
+├── types/             # TypeScript-типи
+└── utils/             # Допоміжні функції (helpers)
+```
+
+## Документація
+
+- **API-документація**: папка `docs/` (генерується командою `npm run docs`)
+- **Каталог компонентів**: `npm run storybook`
+- **Політика конфіденційності**: [PRIVACY_POLICY.md](./PRIVACY_POLICY.md)
+- **Звіт по ліцензіях залежностей**: [licenses-report.md](./licenses-report.md)
+
+## Ліцензія
+
+Проєкт поширюється під ліцензією **MIT**. Повний текст — у файлі [LICENSE](./LICENSE).
+
+Усі прямі залежності проєкту також сумісні з MIT (див. `licenses-report.md`).
+
+## Автор
+
+**Anna Svintsitska**
+
+- GitHub: [github.com/AnnaSvin](https://github.com/AnnaSvin)
+- Репозиторій проєкту: [github.com/AnnaSvin/ReactLabs](https://github.com/AnnaSvin/ReactLabs)
